@@ -1,0 +1,4 @@
+requests
+beautifulsoup4
+aiogram>=2.11.2,<3.0
+environs~=8.0.0
