@@ -17,7 +17,7 @@ async def noon_print():
     liall = habr_parser.new_posts_in_channel()
     li = [k for k, _ in groupby(sorted(liall, key=lambda x: liall.index(x)))]
     for post in li:
-        await bot.send_message(post)
+        await bot.send_message(channels[0], post)
         await asyncio.sleep(2)
     # print(channels[0])
 
