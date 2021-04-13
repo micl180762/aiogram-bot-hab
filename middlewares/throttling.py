@@ -35,3 +35,7 @@ class ThrottlingMiddleware(BaseMiddleware):
     async def message_throttled(self, message: types.Message, throttled: Throttled):
         if throttled.exceeded_count <= 2:
             await message.reply("Нет необходимости часто дублировать команды!")
+
+    async def on_process_callback_query(self, call: types.CallbackQuery, data: dict):
+        handler = current_handler.get()
+        dispatcher = Dispatcher.get_current()

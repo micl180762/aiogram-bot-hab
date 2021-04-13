@@ -5,6 +5,8 @@ from loader import dp, bot
 from aiogram import types
 from data.config import channels
 from aiogram.types import CallbackQuery
+from utils.misc.subscription import check
+from keyboards.inline.callback_datas import choise_callback
 
 
 # если канал закрытый - username нет, только ссылка по которой можно пригласить
@@ -23,12 +25,31 @@ async def show_channels(message: types.Message):
         chat = await bot.get_chat(channel_id_or_username)
         invite_link = await chat.export_invite_link()
         channels_format += f"canal <a href= '{invite_link}'>{chat.title}</a>\n"
-    await message.answer(f"you can to suscr: \n"
+    await message.answer(f"you can to susbcr: \n"
                          f"{channels_format}",
-                         reply_markup=check_button,
-                         disable_web_page_preview=True, parse_mode=types.ParseMode.HTML)
+                         reply_markup=check_button)
 
 
-@dp.callback_query_handler(text='check_subs')
+   # await message.answer(f"you can to susbcr: \n"
+   #                       f"{channels_format}",
+   #                       reply_markup=check_button,
+   #                       disable_web_page_preview=True, parse_mode=types.ParseMode.HTML)
+
+
+
+@dp.callback_query_handler(choise_callback.filter(post_type_choise='check_subs'))
+# @dp.callback_query_handler(state=None)
 async def checker(call: CallbackQuery):
+    await call.message.edit_reply_markup()
     await call.answer()
+    print(channels)
+    result = str()
+    for channel in channels:
+        status = await check(user_id=call.from_user.id, channel=channel)
+        channel = await bot.get_chat(channel)
+        if status:
+            result += f'Подписан на {channel.title}'
+        else:
+            result += f'Подписка на канал {channel.title} не оформлена'
+    await call.message.answer(result, disable_web_page_preview=True)
+

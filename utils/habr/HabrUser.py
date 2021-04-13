@@ -1,6 +1,6 @@
 import requests
 import bs4
-
+from loader import bot
 
 def tags_image_user(profile: str):
     try:
@@ -44,3 +44,6 @@ def get_user_tags(profile: str) -> list:
     if user_tag_list[0] in event_dict.keys():
         return ['-1', event_dict[user_tag_list[0]]]
     return user_tag_list
+
+async def send_message (channel_id: int, text: str):
+    await bot.send_message (channel_id, text)

@@ -2,7 +2,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
 from aiogram.types import CallbackQuery
 import re
-from loader import dp, db
+from loader import dp, db, bot
 from aiogram import types
 from keyboards.inline.choice_buttons import user_keyboard
 from keyboards.inline.callback_datas import choise_callback
@@ -10,12 +10,17 @@ from keyboards.inline.callback_datas import choise_callback
 from utils.misc import rate_limit
 from utils.habr.HabrUser import get_user_tags
 
+from data.config import channels
+from utils.misc.subscription import check
+from keyboards.inline.subscription import check_button
+
 
 @rate_limit(limit=4)
 @dp.message_handler(Command('subscribe'), state=None)
 async def show_items(message: types.Message, user: dict, state: FSMContext):
     await message.answer(f"<b>{user['name']}</b>, выберите параметры рассылки.\n"
-                         f"Ваш текущий статус <b>{user['status_ru']}</b> Неинтересно - Отмена", reply_markup= user_keyboard(user['status']))
+                         f"Ваш текущий статус <b>{user['status_ru']}</b> Неинтересно - Отмена",
+                         reply_markup=user_keyboard(user['status']))
 
 
 # нажата кнопка посты профиля
@@ -24,7 +29,7 @@ async def get_profile_posts(call: CallbackQuery, state: FSMContext, callback_dat
     print(call.message.from_user)
     await state.set_state('set_profile')
     await call.message.answer(f'<b>{call.message.chat.full_name}</b>, '
-                              f'Введите имя существующего профиля Хабра; canсel - отмена')  #,reply_markup=choice_cansel)
+                              f'Введите имя существующего профиля Хабра; canсel - отмена')  # ,reply_markup=choice_cansel)
     await call.message.edit_reply_markup()
 
 
@@ -44,7 +49,8 @@ async def get_all_posts(call: CallbackQuery, callback_data: dict):
     await call.message.edit_reply_markup()
 
 
-@dp.callback_query_handler(choise_callback.filter(post_type_choise='cancel'))  # text - это не text из назв кнопки а из callback_data
+@dp.callback_query_handler(
+    choise_callback.filter(post_type_choise='cancel'))  # text - это не text из назв кнопки а из callback_data
 async def cancel(call: CallbackQuery):
     await call.answer('Отмена! Параметры подписки остались прежними', show_alert=True)
     await call.message.edit_reply_markup()
@@ -67,7 +73,8 @@ async def subscr_cancel(message: types.Message, state: FSMContext, user: dict):
 
     if message.text == 'cancel':
         await state.finish()
-        await message.answer(f"<b>{user['name']}</b>, ваш статус подписки на Хабре остался прежним - <b>{user['status']}</b>")
+        await message.answer(
+            f"<b>{user['name']}</b>, ваш статус подписки на Хабре остался прежним - <b>{user['status']}</b>")
         return
     ut = get_user_tags(message.text)
     if ut[0] != '-1':
@@ -80,5 +87,4 @@ async def subscr_cancel(message: types.Message, state: FSMContext, user: dict):
     else:
         await message.answer(f"<b>{user['name']}</b>, {ut[1]}\n!"
                              f"попробуйте еще; canсel - отмена")
-
 
