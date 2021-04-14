@@ -99,7 +99,8 @@ class HabrParser():
             post_link = post_attr.get('href')
             str_post_tags = ''
             post_all_tags = paragraph.findChildren(class_='inline-list__item')
-            set_post_tags = set()
+            # set_post_tags = set()
+            post_tags_list = list()
             for tag_one in post_all_tags:
                 try:
                     tag_item = (tag_one.find(class_='inline-list__item-link')).text
@@ -108,8 +109,9 @@ class HabrParser():
                     continue
                 str_post_tags += tag_item + ';'
                 # set_post_tags.add(tag_item)
+                post_tags_list.append(tag_item)
                 _post_all_info = {'post_name': post_name,
-                                  'str_post_tags': str_post_tags,
+                                  'post_tags_list': post_tags_list,
                                   'post_date': post_date.strftime('%d-%b %H:%M'),
                                   'post_link': post_link, }
                 posts_all_info_list.append(MappingProxyType(_post_all_info))  # на всяк случай чтобы не менялись данные
@@ -144,5 +146,5 @@ class HabrParser():
         all_post_links_list = list()
         for post in all_new_posts:
             # print(post['post_link'])
-            all_post_links_list.append(post['post_link'])
+            all_post_links_list.append([post['post_link'], post['post_tags_list']])
         return all_post_links_list

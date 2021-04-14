@@ -83,10 +83,10 @@ class Database:
     async def get_users_for_post(self, hubs_names: list):
         sql = "SELECT DISTINCT id_user FROM users_hubs WHERE id_hub IN ("
         sql += "SELECT id FROM hubs WHERE hub_name IN ("
-        sql += ' , '.join([f'\'{num}\'' for num in hubs_names])
+        sql += ' , '.join([f"'{num}'" for num in hubs_names])
         sql += ")"
-        sql += ") OR id_hub = 999"
-
+        sql += ")"
+        print(sql)
         return await self.pool.fetch(sql)
 
     async def subscr_all_posts(self, id):
