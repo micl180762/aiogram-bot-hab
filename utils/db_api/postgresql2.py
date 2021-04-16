@@ -91,10 +91,10 @@ class Database:
 
     async def subscr_all_posts(self, id):
         async with self.pool.acquire() as con:
-            async with con.transaction():
-                await self.update_user_status('all_posts', id)
-                await self.delete_user_hubs(id)
-                await self.add_user_hubs(id, [999])
+            # async with con.transaction():
+            await self.update_user_status('all_posts', id)
+            await self.delete_user_hubs(id)
+            await self.add_user_hubs(id, [999])
 
 
     # async def subscr_all_posts(self, id):

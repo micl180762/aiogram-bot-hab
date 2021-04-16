@@ -19,7 +19,7 @@ async def send_posts_users(li):
         list_suitable_users_id = await db.get_users_for_post(post[1])
         print(f'list_suitable_users_id = {list_suitable_users_id}')
         for user_id in list_suitable_users_id:
-            print(f'user_id={user_id[0]}')
+            # print(f'user_id={user_id[0]}')
             await bot.send_message(user_id[0], post[0])
             await asyncio.sleep(2)
 

@@ -115,6 +115,7 @@ class HabrParser():
                                   'post_date': post_date.strftime('%d-%b %H:%M'),
                                   'post_link': post_link, }
                 posts_all_info_list.append(MappingProxyType(_post_all_info))  # на всяк случай чтобы не менялись данные
+                #print(post_name)
 
         self.log.info(f'Добавили {str(len(posts_all_info_list))} строк')
         self.log.info(f'по дату {self._lastPostDate.strftime("%d-%b %H:%M")}')
