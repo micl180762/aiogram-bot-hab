@@ -39,3 +39,4 @@ class ThrottlingMiddleware(BaseMiddleware):
     async def on_process_callback_query(self, call: types.CallbackQuery, data: dict):
         handler = current_handler.get()
         dispatcher = Dispatcher.get_current()
+        # print('Here!!!')

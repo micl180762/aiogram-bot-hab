@@ -10,6 +10,7 @@ from keyboards.inline.callback_datas import choise_callback
 
 
 # если канал закрытый - username нет, только ссылка по которой можно пригласить
+# IsForvarded - фильтр на пересланное сообщение
 @dp.message_handler(IsForvarded(), content_types=types.ContentType.ANY)
 async def get_channel_info(message: types.Message):
     # await message.answer(f'Message from channel {message.forward_from_chat.title}\n'

@@ -11,7 +11,7 @@ async def bot_help(message: types.Message):
     text = ("Здесь можно оформить подписку на получение постов с сайта 'habr.com'",
             "Список команд: ",
             "/start - Начать диалог",
-            "/help - Получить справку"
+            "/help - Получить справку",
             "/subscribe - Оформить/изменить подписку")
     
     await message.answer("\n".join(text))

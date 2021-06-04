@@ -21,6 +21,12 @@ choice = InlineKeyboardMarkup(row_width=2, inline_keyboard=[
     ]
 ])
 
+choice_cancel = InlineKeyboardMarkup(row_width=2, inline_keyboard=[
+    [
+        cancel
+    ]
+])
+
 # статус все посты
 choice_for_all = InlineKeyboardMarkup(row_width=2, inline_keyboard=[
     [
