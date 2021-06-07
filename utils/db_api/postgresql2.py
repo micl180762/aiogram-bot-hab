@@ -31,7 +31,7 @@ class Database:
         print(rez)
 
     async def add_user(self, id: int, name: str, email: str = None):
-        sql = "INSERT INTO Usersn(id, name, email) VALUES ($1, $2, $3)"
+        sql = "INSERT INTO Usersn(id, name, email, new_user, channel, habr_account) VALUES ($1, $2, $3, TRUE , FALSE , FALSE )"
         try:
             await self.pool.execute(sql, id, name, email)
         except asyncpg.exceptions.UniqueViolationError:
@@ -43,11 +43,24 @@ class Database:
         return sql, tuple(parameters.values())
 
     async def select_user(self, **kwargs):
-        sql = "SELECT id, name, email, status FROM Usersn WHERE "
+        sql = "SELECT id, name, email, status, new_user, channel, habr_account FROM Usersn WHERE "
         sql, params = self.format_args(sql, kwargs)
         print(sql)
         print(*params)
         return await self.pool.fetchrow(sql, *params)
+
+    @staticmethod
+    def format_args_status(sql, parameters: dict):
+        sql += ', '.join([f'{item} = ${num}' for num, item in enumerate(parameters, start=1)])
+        return sql, tuple(parameters.values())
+
+    async def update_user_status2(self, id, **kwargs):
+        sql = 'UPDATE Usersn SET '
+        sql, params = self.format_args_status(sql, kwargs)
+        sql += f" WHERE id = {id}"
+        # print(sql)
+        # print(params)
+        return  # await self.pool.execute(sql, *params)
 
     async def update_user_status(self, status, id):
         sql = 'UPDATE Usersn SET status = $1 WHERE id = $2'

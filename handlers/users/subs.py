@@ -87,6 +87,11 @@ async def cancel(call: CallbackQuery):
     await call.answer('Отмена! Параметры подписки остались прежними', show_alert=True)
     await call.message.edit_reply_markup()
 
+@dp.message_handler(Command('upd'))
+async def show_upd(message: types.Message, user: dict, state: FSMContext):
+    us = await db.update_user_status2(message.from_user.id, new_user=True, channel=False, habr_account=False)
+
+
 
 # отписаться от хабра
 @dp.callback_query_handler(choise_callback.filter(post_type_choise='cancel_allez'))
