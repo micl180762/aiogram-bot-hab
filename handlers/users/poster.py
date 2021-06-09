@@ -30,12 +30,18 @@ async def confirm_post(call: CallbackQuery, state: FSMContext):
     async with state.proxy() as data:
         text = data.get("text")
         mention = data.get("mention")
+
     await state.finish()
     await call.message.edit_reply_markup()
     await call.message.answer("You sent message for check")
     # Это уходит админу для подтв/отказа
+    await state.update_data(autor=mention)
+    mim = await state.get_data()
+    print('state - ')
+    print(mim)
     await bot.send_message(chat_id=admins[0], text=f"User {mention} want to make post:")
-    await bot.send_message(chat_id=admins[0], text=text, parse_mode="HTML", reply_markup=confirmation_keyboard)
+    await bot.send_message(chat_id=admins[0], text=text, parse_mode="HTML",
+                           reply_markup=confirmation_keyboard, disable_web_page_preview=True)
 
 
 @dp.callback_query_handler(post_callback.filter(action="cancel"), state=NewPost.Confirm)
@@ -63,9 +69,13 @@ async def approve_post(call: CallbackQuery):
 
 # admin отклонил
 @dp.callback_query_handler(post_callback.filter(action="cancel"), user_id=admins)
-async def decline_post(call: CallbackQuery):
+async def decline_post(call: CallbackQuery, user: dict, state: FSMContext):
     await call.answer("You decline this post", show_alert=True)
+    print(user['id'])
     await call.message.edit_reply_markup()
+    async with state.proxy() as data:
+        mention = data.get("autor")
+    print(mention)
 
 
 

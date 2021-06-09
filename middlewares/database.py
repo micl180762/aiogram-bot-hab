@@ -11,7 +11,7 @@ class GetDbUser(BaseMiddleware):
 
     async def on_process_message(self, message: types.Message, data: dict):  # data - данные, кот летят в хендлер
         one_us = self.db.select_user(name=message.from_user.full_name)
-        two = self.db.u
+
         if one_us is None:
             self.db.add_user(message.from_user.id, message.from_user.full_name)
             data['user'] = User(id_user=message.from_user.id, name=message.from_user.full_name, status='new_user')

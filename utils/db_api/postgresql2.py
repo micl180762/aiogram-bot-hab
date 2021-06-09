@@ -30,37 +30,44 @@ class Database:
                 rez = await con.fetch('SELECT * FROM Usersn')
         print(rez)
 
+    # добавляем юзера и возвр его новый словарь
     async def add_user(self, id: int, name: str, email: str = None):
-        sql = "INSERT INTO Usersn(id, name, email, new_user, channel, habr_account) VALUES ($1, $2, $3, TRUE , FALSE , FALSE )"
+        sql = \
+            "INSERT INTO Usersn(id, name, email, new_user, channel, habr_account) VALUES ($1, $2, $3, TRUE, FALSE, FALSE)"
         try:
             await self.pool.execute(sql, id, name, email)
         except asyncpg.exceptions.UniqueViolationError:
             pass
+        return {"id": id, "name": name, "email": None, "status": "new_user", "new_user": True, "channel": False, "habr_account": False}
+    # @staticmethod
+    # def format_args(sql, parameters: dict):
+    #     sql += ' AND '.join([f'{item} = ${num}' for num, item in enumerate(parameters, start=1)])
+    #     return sql, tuple(parameters.values())
 
     @staticmethod
-    def format_args(sql, parameters: dict):
-        sql += ' AND '.join([f'{item} = ${num}' for num, item in enumerate(parameters, start=1)])
+    def format_args_var(sql, key_word, parameters: dict):
+        sql += key_word.join([f'{item} = ${num}' for num, item in enumerate(parameters, start=1)])
         return sql, tuple(parameters.values())
 
     async def select_user(self, **kwargs):
         sql = "SELECT id, name, email, status, new_user, channel, habr_account FROM Usersn WHERE "
-        sql, params = self.format_args(sql, kwargs)
+        sql, params = self.format_args_var(sql, ' AND ', kwargs)
         print(sql)
         print(*params)
         return await self.pool.fetchrow(sql, *params)
 
-    @staticmethod
-    def format_args_status(sql, parameters: dict):
-        sql += ', '.join([f'{item} = ${num}' for num, item in enumerate(parameters, start=1)])
-        return sql, tuple(parameters.values())
+    # @staticmethod
+    # def format_args_status(sql, parameters: dict):
+    #     sql += ', '.join([f'{item} = ${num}' for num, item in enumerate(parameters, start=1)])
+    #     return sql, tuple(parameters.values())
 
     async def update_user_status2(self, id, **kwargs):
         sql = 'UPDATE Usersn SET '
-        sql, params = self.format_args_status(sql, kwargs)
+        sql, params = self.format_args_var(sql, ', ', kwargs)
         sql += f" WHERE id = {id}"
-        # print(sql)
-        # print(params)
-        return  # await self.pool.execute(sql, *params)
+        print(sql)
+        print(params)
+        return await self.pool.execute(sql, *params)
 
     async def update_user_status(self, status, id):
         sql = 'UPDATE Usersn SET status = $1 WHERE id = $2'
@@ -109,7 +116,6 @@ class Database:
             await self.delete_user_hubs(id)
             await self.add_user_hubs(id, [999])
 
-
     # async def subscr_all_posts(self, id):
     #     tr = self.pool.acquire().transaction()
     #     await tr.start()
@@ -132,7 +138,6 @@ class Database:
 #     raise
 # else:
 #     await tr.commit()
-
 
 
 # db = Database()

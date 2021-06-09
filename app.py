@@ -25,7 +25,7 @@ async def noon_print():
 
 
 async def scheduler():
-    await bot.send_message(channels[0], '!!start sending posts!!')
+    # await bot.send_message(channels[0], '!!start sending posts!!')
     aioschedule.every(15).minutes.do(noon_print)
     while True:
         await aioschedule.run_pending()

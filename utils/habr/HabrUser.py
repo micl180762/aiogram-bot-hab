@@ -2,6 +2,7 @@ import requests
 import bs4
 from loader import bot
 
+
 def tags_image_user(profile: str):
     try:
         res = requests.get('https://habr.com/ru/users/' + profile.strip() + '/')
@@ -45,5 +46,6 @@ def get_user_tags(profile: str) -> list:
         return ['-1', event_dict[user_tag_list[0]]]
     return user_tag_list
 
-async def send_message (channel_id: int, text: str):
-    await bot.send_message (channel_id, text)
+
+async def send_message(channel_id: int, text: str):
+    await bot.send_message(channel_id, text)
