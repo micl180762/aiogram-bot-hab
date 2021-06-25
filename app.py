@@ -34,7 +34,7 @@ async def scheduler():
 
 async def on_startup(dispatcher):
     # Уведомляет про запуск
-    await on_startup_notify(dispatcher)
+    # await on_startup_notify(dispatcher)
     await db.create()
     asyncio.create_task(scheduler())
 

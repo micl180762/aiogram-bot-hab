@@ -69,9 +69,9 @@ class Database:
         print(params)
         return await self.pool.execute(sql, *params)
 
-    async def update_user_status(self, status, id):
-        sql = 'UPDATE Usersn SET status = $1 WHERE id = $2'
-        return await self.pool.execute(sql, status, id)
+    async def update_user_status(self, status, id, new_user=True, habr_account=False):
+        sql = 'UPDATE Usersn SET status = $1, new_user = $2, habr_account = $3 WHERE id = $4'
+        return await self.pool.execute(sql, status, new_user, habr_account, id)
 
     async def delete_user_hubs(self, id):
         sql = 'DELETE FROM Users_hubs WHERE id_user = $1'

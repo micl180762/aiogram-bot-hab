@@ -1,7 +1,7 @@
 import asyncio
 
 from aiogram import types, Dispatcher
-from aiogram.dispatcher import DEFAULT_RATE_LIMIT
+from aiogram.dispatcher import DEFAULT_RATE_LIMIT, FSMContext
 from aiogram.dispatcher.handler import CancelHandler, current_handler
 from aiogram.dispatcher.middlewares import BaseMiddleware
 from aiogram.utils.exceptions import Throttled
@@ -39,4 +39,5 @@ class ThrottlingMiddleware(BaseMiddleware):
     async def on_process_callback_query(self, call: types.CallbackQuery, data: dict):
         handler = current_handler.get()
         dispatcher = Dispatcher.get_current()
+
         # print('Here!!!')
