@@ -36,9 +36,9 @@ async def confirm_post(call: CallbackQuery, state: FSMContext):
     await call.message.answer("You sent message for check")
     # Это уходит админу для подтв/отказа
     await state.update_data(autor=mention)
-    mim = await state.get_data()
-    print('state - ')
-    print(mim)
+    # mim = await state.get_data()
+    # print('state - ')
+    # print(mim)
     await bot.send_message(chat_id=admins[0], text=f"User {mention} want to make post:")
     await bot.send_message(chat_id=admins[0], text=text, parse_mode="HTML",
                            reply_markup=confirmation_keyboard, disable_web_page_preview=True)

@@ -9,7 +9,7 @@ cancel = InlineKeyboardButton(text="Отмена", callback_data=choise_callback
 cancel_allez = InlineKeyboardButton(text="Отписаться",
                                     callback_data=choise_callback.new(post_type_choise='cancel_allez'))
 profile_posts_other = InlineKeyboardButton(text="Поучать посты по хабам другого профиля",
-                                           callback_data=choise_callback.new(post_type_choise='profile_posts_edit'))
+                                           callback_data=choise_callback.new(post_type_choise='profile_posts_add'))
 
 # новый подписчик
 choice = InlineKeyboardMarkup(row_width=2, inline_keyboard=[
