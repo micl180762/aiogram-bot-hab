@@ -1,0 +1,35 @@
+from aiogram import executor
+import aioschedule
+import asyncio
+from data.config import channels
+import utils.habr.HabrParser as hp
+
+from loader import dp, db, bot
+import middlewares, filters, handlers
+from utils.notify_admins import on_startup_notify
+from itertools import groupby
+
+habr_parser = hp.HabrParser()
+
+# liall = habr_parser.new_posts_in_channel()
+# li = [k for k, _ in groupby(sorted(liall, key=lambda x: liall.index(x)))]
+pass
+
+
+# динмаический словарь
+def arifme_dict(op, x, y=0):
+    r = {
+        'add': lambda: x + y,
+        'sub': lambda: x - y,
+        'ink': lambda: x + 1,
+    }
+    return r.get(op, lambda: None)()
+
+
+print(arifme_dict('add', 7, 8))
+print(arifme_dict('ink', 7))
+
+# for post in li:Д
+#     print(post)
+#     bot.send_message(channels[0], post)
+#     asyncio.sleep(2)

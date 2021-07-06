@@ -7,13 +7,12 @@ from keyboards.inline.choice_subs import choice_for_all, choice_for_profile, cho
     cancel_quest
 from utils.misc import rate_limit
 from utils.habr.HabrUser import get_user_tags
-
 from data.config import channels
-from states.profile_state import ChangeProfile # все состояния для команды
+from states.profile_state import ChangeProfile  # все состояния для команды
 
 
 @rate_limit(limit=4)
-@dp.message_handler(Command('sb'), state=None)
+@dp.message_handler(Command('subscribe'), state=None)
 async def show_items(message: Message, user: dict):
     await ChangeProfile.Subscribe_State.set()
     chat = await bot.get_chat(channels[0])
@@ -65,7 +64,6 @@ async def add_profile(call: CallbackQuery):
 
 # @dp.callback_query_handler(choise_callback.filter(post_type_choise='cancel_allez'))
 async def cancel_profile(call: CallbackQuery):
-    # await state.finish()
     await ChangeProfile.Unsubscribe_Question.set()
     await call.message.edit_reply_markup()
     await call.message.answer("Желаете отписаться от аккаунта Хабра для этото бота?", reply_markup=cancel_quest)
@@ -95,7 +93,7 @@ async def unsubscribe_profile(call: CallbackQuery, state: FSMContext):
     await call.message.answer(f"{call.from_user['first_name']}, рассылка по профилю вам больше приходить не будет")
     await call.message.answer(f"От {channels_format} отпишитесь прямо в нем")
 
-
+# реакция на ввод имени профиля хабра
 @dp.message_handler(state=ChangeProfile.EditProfile)
 async def enter_message(message: Message, state: FSMContext, user: dict):
     template = r'[a-zA-Z0-9_-]+'

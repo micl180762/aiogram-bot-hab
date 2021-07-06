@@ -1,27 +1,26 @@
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
-from aiogram import types
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, Message
 
 from data.config import admins, channels
 from keyboards.inline.manage_post import confirmation_keyboard, post_callback
 from loader import dp, bot
 
-# заявка на публикацию поста в канале
+# подтвердить/отказаться от сообщения админу
 from states.poster_state import NewPost
 
 
-@dp.message_handler(Command("create_post"))
-async def create_message(message: types.Message):
-    await message.answer('post for public')
+@dp.message_handler(Command("personal_question"))
+async def create_message(message: Message):
+    await message.answer('Введите текст сообщения')
     await NewPost.EnterMessage.set()
 
 
 @dp.message_handler(state=NewPost.EnterMessage)
-async def enter_message(message: types.Message, state: FSMContext):
+async def enter_message(message: Message, state: FSMContext):
     # сохраняем текст с разметкой и ссылкой на автора
     await state.update_data(text=message.html_text, mention=message.from_user.get_mention())
-    await message.answer('Check message?', reply_markup=confirmation_keyboard)
+    await message.answer('Отправить сообщение?', reply_markup=confirmation_keyboard)
     await NewPost.next()  # Confirm
 
 
@@ -33,28 +32,27 @@ async def confirm_post(call: CallbackQuery, state: FSMContext):
 
     await state.finish()
     await call.message.edit_reply_markup()
-    await call.message.answer("You sent message for check")
+    await call.message.answer("Отправлено!")
     # Это уходит админу для подтв/отказа
     await state.update_data(autor=mention)
-    # mim = await state.get_data()
-    # print('state - ')
-    # print(mim)
-    await bot.send_message(chat_id=admins[0], text=f"User {mention} want to make post:")
+    await bot.send_message(chat_id=admins[0], text=f"User {mention} sent message:")
+    # await bot.send_message(chat_id=admins[0], text=text, parse_mode="HTML",
+    #                        reply_markup=confirmation_keyboard, disable_web_page_preview=True)
     await bot.send_message(chat_id=admins[0], text=text, parse_mode="HTML",
-                           reply_markup=confirmation_keyboard, disable_web_page_preview=True)
+                           disable_web_page_preview=True)
 
 
 @dp.callback_query_handler(post_callback.filter(action="cancel"), state=NewPost.Confirm)
 async def cancel_post(call: CallbackQuery, state: FSMContext):
     await state.finish()
     await call.message.edit_reply_markup()
-    await call.message.answer("You cancelled your post")
+    await call.message.answer("Вы отменили отправку сообщения")
 
 
 # вместо подтв пытается что-то писать, козел
 @dp.message_handler(state=NewPost.Confirm)
-async def post_unknown(message: types.Message):
-    await message.answer("Finish play the fool, push button! ")
+async def post_unknown(message: Message):
+    await message.answer("Finish play the fool, push button! :P ")
 
 
 # admin выбрал!
@@ -76,12 +74,3 @@ async def decline_post(call: CallbackQuery, user: dict, state: FSMContext):
     async with state.proxy() as data:
         mention = data.get("autor")
     print(mention)
-
-
-
-
-
-
-
-
-

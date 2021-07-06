@@ -16,7 +16,7 @@ from keyboards.inline.subscription import check_button
 
 
 @rate_limit(limit=4)
-@dp.message_handler(Command('subscribe'), state=None)
+@dp.message_handler(Command('subs_cribe'), state=None)
 async def show_items(message: types.Message, user: dict, state: FSMContext):
     await message.answer(f"<b>{user['name']}</b>, выберите параметры рассылки.\n"
                          f"Ваш текущий статус <b>{user['status_ru']}</b> Неинтересно - Отмена",

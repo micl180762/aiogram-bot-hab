@@ -13,6 +13,6 @@ async def bot_help(message: types.Message):
             "/start - Начать диалог",
             "/help - Получить  Эту справку",
             "/subscribe - Оформить/изменить подписку",
-            "/message - написать владельцу канала/бота")
+            "/personal_question - написать владельцу канала/бота")
     
     await message.answer("\n".join(text))
